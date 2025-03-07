@@ -6,7 +6,7 @@ import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
 import cool.auv.codegeneratorjpa.core.utils.PaginationUtil;
 import cool.auv.codegeneratorjpa.core.utils.ResponseUtil;
-import cool.auv.codegeneratorjpa.core.vm.CommonPageVM;
+import cool.auv.codegeneratorjpa.core.vm.PageSortRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -84,9 +84,9 @@ public class ControllerGenerateService {
                             .addMember("value", "$S", basePath + "/findByPage")
                             .build())
                     .addParameter(ParameterSpec.builder(ClassName.get(pkg.getRequest(), name.getRequestName()), name.getRequestVariable()).build())
-                    .addParameter(ParameterSpec.builder(ClassName.get(CommonPageVM.class), "pageVm").build())
+                    .addParameter(ParameterSpec.builder(ClassName.get(PageSortRequest.class), "pageSortRequest").build())
                     .returns(ParameterizedTypeName.get(ClassName.get(ResponseEntity.class), ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(pkg.getVm(), name.getVmName()))))
-                    .addStatement("$T<$T> page = $N.findPage($N.buildSpecification(), pageVm.pageableWithSort())",
+                    .addStatement("$T<$T> page = $N.findPage($N.buildSpecification(), pageSortRequest.pageableWithSort())",
                             ClassName.get(Page.class), ClassName.get(pkg.getVm(), name.getVmName()), name.getBaseServiceVariable(), name.getRequestVariable())
                     .addStatement("$T headers = $T.generatePaginationHttpHeaders($T.fromCurrentRequest(), page)",
                             HttpHeaders.class, PaginationUtil.class, ServletUriComponentsBuilder.class)
