@@ -8,10 +8,10 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>cool.auv</groupId>
-  <artifactId>codeGenerator-jpa</artifactId>
-  <name>codeGenerator-jpa</name>
+    <artifactId>code-generator-jpa</artifactId>
+    <name>code-generator-jpa</name>
   <version>0.0.1-SNAPSHOT</version>
-  <description>codeGenerator-jpa</description>
+    <description>code-generator-jpa</description>
   <developers>
     <developer />
   </developers>

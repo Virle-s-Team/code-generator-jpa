@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cool.auv</groupId>
-    <artifactId>codeGenerator-jpa</artifactId>
+    <artifactId>code-generator-jpa</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>codeGenerator-jpa</name>
-    <description>codeGenerator-jpa</description>
+    <name>code-generator-jpa</name>
+    <description>code-generator-jpa</description>
     <url/>
     <licenses>
         <license/>

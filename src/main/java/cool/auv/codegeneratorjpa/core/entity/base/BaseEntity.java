@@ -1,6 +1,7 @@
 package cool.auv.codegeneratorjpa.core.entity.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
+@MappedSuperclass
 public class BaseEntity implements Serializable {
 
     /**
