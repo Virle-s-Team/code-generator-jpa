@@ -53,13 +53,13 @@ public class ServiceImplGenerateService {
                 .addAnnotation(GeneratorUtil.buildGeneratedAnnotation())
                 .addField(
                         FieldSpec.builder(ClassName.get(pkg.getRepository(), name.getBaseRepositoryName()), baseRepositoryVariable)
-                                .addModifiers(Modifier.PRIVATE)
+                                .addModifiers(Modifier.PROTECTED)
                                 .addAnnotation(Autowired.class)
                                 .build()
                 )
                 .addField(
                         FieldSpec.builder(ClassName.get(pkg.getMapstruct(), name.getBaseMapstructName()), baseMapstructVariable)
-                        .addModifiers(Modifier.PRIVATE)
+                                .addModifiers(Modifier.PROTECTED)
                         .addAnnotation(Autowired.class)
                         .build())
                 .addMethod(
