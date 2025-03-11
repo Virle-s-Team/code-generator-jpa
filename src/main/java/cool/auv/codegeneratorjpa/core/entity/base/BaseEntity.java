@@ -43,8 +43,4 @@ public class BaseEntity implements Serializable {
      */
     private String searchText;
 
-    /**
-     * 删除标识
-     */
-    private Boolean isDeleted = false;
 }
