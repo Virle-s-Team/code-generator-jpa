@@ -7,6 +7,8 @@ import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
 import cool.auv.codegeneratorjpa.core.utils.PaginationUtil;
 import cool.auv.codegeneratorjpa.core.utils.ResponseUtil;
 import cool.auv.codegeneratorjpa.core.vm.PageSortRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +53,7 @@ public class ControllerGenerateService {
         TypeSpec.Builder controllerBuilder = TypeSpec.classBuilder(name.getBaseControllerName())
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(RestController.class)
+                .addAnnotation(AnnotationSpec.builder(Tag.class).addMember("name", "$S", String.format("%s controller", name.getEntityName())).build())
                 .addField(
                         FieldSpec.builder(ClassName.get(pkg.getService(), name.getBaseServiceName()), name.getBaseServiceVariable())
                                 .addModifiers(Modifier.PROTECTED)
@@ -63,6 +66,7 @@ public class ControllerGenerateService {
                     .addAnnotation(AnnotationSpec.builder(GetMapping.class)
                             .addMember("value", "$S", basePath + "/{id}")
                             .build())
+                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "findById").build())
                     .addParameter(
                             ParameterSpec.builder(TypeName.LONG, "id")
                                     .addAnnotation(AnnotationSpec.builder(PathVariable.class)
@@ -83,6 +87,7 @@ public class ControllerGenerateService {
                     .addAnnotation(AnnotationSpec.builder(GetMapping.class)
                             .addMember("value", "$S", basePath + "/findByPage")
                             .build())
+                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "findByPage").build())
                     .addParameter(ParameterSpec.builder(ClassName.get(pkg.getRequest(), name.getRequestName()), name.getRequestVariable()).build())
                     .addParameter(ParameterSpec.builder(ClassName.get(PageSortRequest.class), "pageSortRequest").build())
                     .returns(ParameterizedTypeName.get(ClassName.get(ResponseEntity.class), ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(pkg.getVm(), name.getVmName()))))
@@ -101,6 +106,7 @@ public class ControllerGenerateService {
                     .addAnnotation(AnnotationSpec.builder(PostMapping.class)
                             .addMember("value", "$S", basePath)
                             .build())
+                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "save").build())
                     .addParameter(ParameterSpec.builder(ClassName.get(pkg.getVm(), name.getVmName()), name.getVmVariable()).addAnnotation(RequestBody.class).build())
                     .returns(ParameterizedTypeName.get(ResponseEntity.class, Void.class))
                     .addStatement("$N.save($N)", name.getBaseServiceVariable(), name.getVmVariable())
@@ -115,6 +121,7 @@ public class ControllerGenerateService {
                     .addAnnotation(AnnotationSpec.builder(DeleteMapping.class)
                             .addMember("value", "$S", basePath + "/{id}")
                             .build())
+                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "deleteById").build())
                     .addParameter(
                             ParameterSpec.builder(TypeName.LONG, "id")
                                     .addAnnotation(AnnotationSpec.builder(PathVariable.class)
