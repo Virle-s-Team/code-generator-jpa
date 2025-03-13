@@ -221,6 +221,13 @@
           <scope>provided</scope>
       </dependency>
   </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Virle-s-Team/code-generator-jpa</url>
+        </repository>
+    </distributionManagement>
   <properties>
     <maven.compiler.target>17</maven.compiler.target>
     <java.version>17</java.version>

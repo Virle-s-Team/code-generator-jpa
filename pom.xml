@@ -33,6 +33,14 @@
 
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Virle-s-Team/code-generator-jpa</url>
+        </repository>
+    </distributionManagement>
+
 
     <repositories>
         <repository>
