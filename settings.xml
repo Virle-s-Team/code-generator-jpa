@@ -4,15 +4,14 @@
 
     <profiles>
         <profile>
-            <id>github</id>
+            <id>virle-private</id>
             <repositories>
                 <repository>
-                    <id>central</id>
-                    <url>https://repo1.maven.org/maven2</url>
-                </repository>
-                <repository>
-                    <id>github</id>
-                    <url>https://maven.pkg.github.com/OWNER/REPOSITORY</url>
+                    <id>virle-private</id>
+                    <url>https://packages.aliyun.com/67cf0f12171fc8e8d8c4f8dc/maven/virle-private</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
@@ -24,9 +23,9 @@
 
     <servers>
         <server>
-            <id>github</id>
-            <username>${env.GITHUB_ACTOR}</username>
-            <password>${env.GITHUB_TOKEN}</password>
+            <id>virle-private</id>
+            <username>67cf051087eb3ab8bcd05004</username>
+            <password>jVaJML3fJ4C6</password>
         </server>
     </servers>
 </settings>

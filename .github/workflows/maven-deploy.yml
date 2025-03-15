@@ -17,10 +17,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-   
 
     steps:
     - uses: actions/checkout@v4
@@ -31,6 +27,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Publish package
-      run: mvn deploy
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: mvn deploy -s settings.xml

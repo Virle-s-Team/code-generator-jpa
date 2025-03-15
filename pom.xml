@@ -35,9 +35,9 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Virle-s-Team/code-generator-jpa</url>
+            <id>virle-private</id>
+            <name>virle private Maven Packages</name>
+            <url>https://packages.aliyun.com/67cf0f12171fc8e8d8c4f8dc/maven/virle-private</url>
         </repository>
     </distributionManagement>
 
