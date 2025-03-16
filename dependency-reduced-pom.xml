@@ -83,16 +83,6 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <releases />
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>aliyunmaven</id>
-      <url>https://maven.aliyun.com/repository/public</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>mysql</groupId>
