@@ -10,6 +10,7 @@ import cool.auv.codegeneratorjpa.core.utils.ResponseUtil;
 import cool.auv.codegeneratorjpa.core.vm.PageSortRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -50,11 +51,14 @@ public class ControllerGenerateService {
         String basePath = context.getAnnotations().autoEntity().basePath();
 
         AutoEntity.ControllerExclude[] controllerExcludes = context.getAnnotations().autoEntity().controllerExclude();
-
+        String docTag = context.getAnnotations().autoEntity().docTag();
+        if (StringUtils.isEmpty(docTag)) {
+            docTag = String.format("%s controller", name.getEntityName());
+        }
         TypeSpec.Builder controllerBuilder = TypeSpec.classBuilder(name.getBaseControllerName())
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(RestController.class)
-                .addAnnotation(AnnotationSpec.builder(Tag.class).addMember("name", "$S", String.format("%s controller", name.getEntityName())).build())
+                .addAnnotation(AnnotationSpec.builder(Tag.class).addMember("name", "$S", docTag).build())
                 .addField(
                         FieldSpec.builder(ClassName.get(pkg.getService(), name.getBaseServiceName()), name.getBaseServiceVariable())
                                 .addModifiers(Modifier.PROTECTED)
@@ -124,7 +128,7 @@ public class ControllerGenerateService {
                     .addAnnotation(AnnotationSpec.builder(PutMapping.class)
                             .addMember("value", "$S", basePath)
                             .build())
-                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "save").build())
+                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "update").build())
                     .addParameter(ParameterSpec.builder(ClassName.get(pkg.getVm(), name.getVmName()), name.getVmVariable()).addAnnotation(RequestBody.class).build())
                     .addException(ClassName.get(AppException.class))
                     .returns(ParameterizedTypeName.get(ResponseEntity.class, Void.class))

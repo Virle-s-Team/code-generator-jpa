@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 public @interface AutoEntity {
     String basePath();
 
+    String docTag() default "";
+
     ControllerExclude[] controllerExclude() default {};
 
     GenerateFileType[] generateFileType() default { GenerateFileType.All };
