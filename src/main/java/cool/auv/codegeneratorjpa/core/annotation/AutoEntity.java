@@ -27,6 +27,7 @@ public @interface AutoEntity {
         findById,
         findByPage,
         save,
+        update,
         deleteById
     }
 }

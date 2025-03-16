@@ -2,6 +2,7 @@ package cool.auv.codegeneratorjpa.core.service.javapoet;
 
 import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
+import cool.auv.codegeneratorjpa.core.exception.AppException;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,11 +67,30 @@ public class ServiceImplGenerateService {
                         MethodSpec.methodBuilder("save")
                                 .addModifiers(Modifier.PUBLIC)
                                 .addAnnotation(Transactional.class)
+                                .returns(void.class)
+                                .addParameter(ParameterSpec.builder(ClassName.get(pkg.getVm(), name.getVmName()), name.getVmVariable()).build())
+                                .addException(ClassName.get(AppException.class))
+                                .beginControlFlow("if ($N.getId() == null)", name.getVmVariable())
+                                .addStatement("$T $N = $N.vmToEntity($N)", entityType, name.getEntityVariable(), name.getBaseMapstructVariable(), name.getVmVariable())
+                                .addStatement("$N.save($N)", name.getBaseRepositoryVariable(), name.getEntityVariable())
+                                .nextControlFlow("else")
+                                .addStatement("throw new $T($S)",
+                                        ClassName.get(AppException.class),
+                                        "save 对象id应该为空")
+                                .endControlFlow()
+                                .build()
+                )
+                .addMethod(
+                        MethodSpec.methodBuilder("update")
+                                .addModifiers(Modifier.PUBLIC)
+                                .addAnnotation(Transactional.class)
                                 .addParameter(ParameterSpec.builder(vmType, name.getVmVariable()).build())
+                                .addException(ClassName.get(AppException.class))
                                 .returns(TypeName.VOID)
                                 .beginControlFlow("if ($N.getId() == null)", name.getVmVariable())
-                                .addStatement("$T $N = $N.vmToEntity($N)", entityType, name.getEntityVariable(), baseMapstructVariable, name.getVmVariable())
-                                .addStatement("$N.save($N)", baseRepositoryVariable, name.getEntityVariable())
+                                .addStatement("throw new $T($S)",
+                                        ClassName.get(AppException.class),
+                                        "update 对象id不能为空")
                                 .nextControlFlow("else")
                                 .addStatement("$N.findById($N.getId()).ifPresent($N -> $N.updateEntityFromVM($N, $N))",
                                         baseRepositoryVariable, name.getVmVariable(), name.getEntityVariable(), baseMapstructVariable, name.getVmVariable(), name.getEntityVariable())

@@ -2,6 +2,7 @@ package cool.auv.codegeneratorjpa.core.service.javapoet;
 
 import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
+import cool.auv.codegeneratorjpa.core.exception.AppException;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
 import cool.auv.codegeneratorjpa.core.utils.PaginationUtil;
@@ -108,6 +109,7 @@ public class ControllerGenerateService {
                             .build())
                     .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "save").build())
                     .addParameter(ParameterSpec.builder(ClassName.get(pkg.getVm(), name.getVmName()), name.getVmVariable()).addAnnotation(RequestBody.class).build())
+                    .addException(ClassName.get(AppException.class))
                     .returns(ParameterizedTypeName.get(ResponseEntity.class, Void.class))
                     .addStatement("$N.save($N)", name.getBaseServiceVariable(), name.getVmVariable())
                     .addStatement("return $T.ok().build()", ResponseEntity.class)
@@ -115,6 +117,24 @@ public class ControllerGenerateService {
 
             controllerBuilder.addMethod(save);
         }
+
+        if (Arrays.stream(controllerExcludes).noneMatch(exclude -> exclude == AutoEntity.ControllerExclude.update)) {
+            MethodSpec save = MethodSpec.methodBuilder("update")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addAnnotation(AnnotationSpec.builder(PutMapping.class)
+                            .addMember("value", "$S", basePath)
+                            .build())
+                    .addAnnotation(AnnotationSpec.builder(Operation.class).addMember("summary", "$S", "save").build())
+                    .addParameter(ParameterSpec.builder(ClassName.get(pkg.getVm(), name.getVmName()), name.getVmVariable()).addAnnotation(RequestBody.class).build())
+                    .addException(ClassName.get(AppException.class))
+                    .returns(ParameterizedTypeName.get(ResponseEntity.class, Void.class))
+                    .addStatement("$N.update($N)", name.getBaseServiceVariable(), name.getVmVariable())
+                    .addStatement("return $T.ok().build()", ResponseEntity.class)
+                    .build();
+
+            controllerBuilder.addMethod(save);
+        }
+
         if (Arrays.stream(controllerExcludes).noneMatch(exclude-> exclude == AutoEntity.ControllerExclude.deleteById)) {
             MethodSpec deleteById = MethodSpec.methodBuilder("deleteById")
                     .addModifiers(Modifier.PUBLIC)

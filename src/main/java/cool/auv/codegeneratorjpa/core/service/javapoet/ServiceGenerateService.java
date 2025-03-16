@@ -2,6 +2,7 @@ package cool.auv.codegeneratorjpa.core.service.javapoet;
 
 import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
+import cool.auv.codegeneratorjpa.core.exception.AppException;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,6 @@ import javax.lang.model.element.Modifier;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 import java.util.Optional;
 
 public class ServiceGenerateService {
@@ -45,6 +45,15 @@ public class ServiceGenerateService {
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(
                         MethodSpec.methodBuilder("save")
+                                .addException(ClassName.get(AppException.class))
+                                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                                .addParameter(ParameterSpec.builder(vmType, name.getVmVariable()).build())
+                                .returns(TypeName.VOID)
+                                .build()
+                )
+                .addMethod(
+                        MethodSpec.methodBuilder("update")
+                                .addException(ClassName.get(AppException.class))
                                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                                 .addParameter(ParameterSpec.builder(vmType, name.getVmVariable()).build())
                                 .returns(TypeName.VOID)
