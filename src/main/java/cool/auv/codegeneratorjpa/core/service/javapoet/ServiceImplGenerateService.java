@@ -134,7 +134,7 @@ public class ServiceImplGenerateService {
                 )
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(pkg.getService(), serviceImplClass)
+        JavaFile javaFile = JavaFile.builder(pkg.getServiceImpl(), serviceImplClass)
                 .build();
         String generatedCode = javaFile.toString();
         JavaFileObject sourceFile = filer.createSourceFile(pkg.getServiceImpl() + "." + name.getBaseServiceImplName());
