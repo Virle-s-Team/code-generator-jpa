@@ -100,6 +100,7 @@ public class ServiceImplGenerateService {
                 .addMethod(
                         MethodSpec.methodBuilder("findById")
                                 .addModifiers(Modifier.PUBLIC)
+                                .addAnnotation(AnnotationSpec.builder(Transactional.class).addMember("readOnly", "$L", true).build())
                                 .addParameter(ParameterSpec.builder(TypeName.LONG, "id").build())
                                 .returns(ParameterizedTypeName.get(ClassName.get(Optional.class), vmType))
                                 .addStatement("return $N.findById($N).map($N::entityToVm)", baseRepositoryVariable, "id", baseMapstructVariable)
@@ -108,6 +109,7 @@ public class ServiceImplGenerateService {
                 .addMethod(
                         MethodSpec.methodBuilder("findAll")
                                 .addModifiers(Modifier.PUBLIC)
+                                .addAnnotation(AnnotationSpec.builder(Transactional.class).addMember("readOnly", "$L", true).build())
                                 .returns(ParameterizedTypeName.get(ClassName.get(Page.class), vmType))
                                 .addParameter(ParameterSpec.builder(ClassName.get(Pageable.class), "pageable").build())
                                 .addStatement("return $N.findAll($N).map($N::entityToVm)", baseRepositoryVariable, "pageable", baseMapstructVariable)
@@ -116,6 +118,7 @@ public class ServiceImplGenerateService {
                 .addMethod(
                         MethodSpec.methodBuilder("findPage")
                                 .addModifiers(Modifier.PUBLIC)
+                                .addAnnotation(AnnotationSpec.builder(Transactional.class).addMember("readOnly", "$L", true).build())
                                 .returns(ParameterizedTypeName.get(ClassName.get(Page.class), vmType))
                                 .addParameter(ParameterizedTypeName.get(ClassName.get(Specification.class), entityType), "specification")
                                 .addParameter(ClassName.get(Pageable.class), "pageable")
