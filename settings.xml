@@ -35,7 +35,7 @@
         <server>
             <id>github</id>
             <username>geyingauv</username>
-            <password>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</password>
+            <password>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</password>
         </server>
     </servers>
 
@@ -44,4 +44,5 @@
             repository
         </activeProfile>
     </activeProfiles>
+
 </settings>
