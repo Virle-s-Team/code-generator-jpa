@@ -170,6 +170,81 @@ mvn clean compile
 ```
 编译完成后，所有生成的代码（`BaseProductRepository`, `BaseProductService`等）将会自动出现在你的`target/generated-sources/annotations`目录下，并被IDE识别。你的项目现在已经拥有了一套完整的关于`Product`的CRUD API。
 
+## 生成的API接口
+
+假设我们有一个`TestEntity`，并且在`@AutoEntity`注解中设置了`basePath = "/api/test"`，那么生成的接口如下：
+
+#### **1. 创建实体 (Create)**
+
+*   **功能**: 创建一个新的`TestEntity`。
+*   **方法**: `POST`
+*   **路径**: `/api/test`
+*   **请求体 (Request Body)**: 一个`TestEntityVM`对象（JSON格式），其中`id`字段必须为空。
+    ```json
+    {
+      "name": "Some Name",
+      "email": "test@example.com"
+    }
+    ```
+*   **成功响应**: `200 OK`，无返回内容。
+
+#### **2. 更新实体 (Update)**
+
+*   **功能**: 根据ID更新一个已存在的`TestEntity`。
+*   **方法**: `PUT`
+*   **路径**: `/api/test`
+*   **请求体 (Request Body)**: 一个`TestEntityVM`对象（JSON格式），其中`id`字段必须有值。
+    ```json
+    {
+      "id": 1,
+      "name": "New Name",
+      "email": "new@example.com"
+    }
+    ```
+*   **成功响应**: `200 OK`，无返回内容。
+
+#### **3. 根据ID查询 (Find by ID)**
+
+*   **功能**: 获取单个`TestEntity`的详细信息。
+*   **方法**: `GET`
+*   **路径**: `/api/test/{id}`
+*   **路径参数 (Path Variable)**:
+    *   `id`: 要查询的实体ID。
+*   **成功响应**: `200 OK`，响应体为一个`TestEntityVM`对象。
+    ```json
+    {
+      "id": 1,
+      "name": "New Name",
+      "email": "new@example.com"
+    }
+    ```
+
+#### **4. 分页和条件查询 (Find by Page)**
+
+*   **功能**: 根据一组条件进行分页和排序查询。
+*   **方法**: `GET`
+*   **路径**: `/api/test/findByPage`
+*   **查询参数 (Query Parameters)**:
+    *   来自`TestEntityRequest`类的所有字段，例如 `name=some_value&email=test@example.com`。
+    *   分页和排序参数，例如 `page=0&size=10&sort=id,desc`。
+*   **成功响应**: `200 OK`，响应体为一个`TestEntityVM`对象的数组。
+    ```json
+    [
+      { "id": 1, "name": "Name 1", "email": "email1@example.com" },
+      { "id": 2, "name": "Name 2", "email": "email2@example.com" }
+    ]
+    ```
+    同时，响应头（Response Headers）中会包含分页信息，如`X-Total-Count`和`Link`。
+
+#### **5. 根据ID删除 (Delete)**
+
+*   **功能**: 删除一个`TestEntity`。
+*   **方法**: `DELETE`
+*   **路径**: `/api/test/{id}`
+*   **路径参数 (Path Variable)**:
+    *   `id`: 要删除的实体ID。
+*   **成功响应**: `200 OK`，无返回内容。
+
 ## 贡献
 
 欢迎通过提交Issue或Pull Request来改进项目。
