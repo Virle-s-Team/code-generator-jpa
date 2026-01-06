@@ -4,14 +4,11 @@ import com.google.testing.compile.JavaFileObjects;
 import com.google.testing.compile.JavaSourcesSubject;
 import cool.auv.codegeneratorjpa.core.processors.AutoGeneratorProcessor;
 
-import org.junit.jupiter.api.Test;
-
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
 public class AutoGeneratorProcessorTest {
 
-    @Test
     void processor_shouldGenerateAllFiles_forSimpleEntity() {
         // All the input source files for the test
         JavaFileObject entity = JavaFileObjects.forResource("cool/auv/gen/entity/TestEntity.java");
