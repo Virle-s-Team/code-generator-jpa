@@ -22,13 +22,7 @@ public class AutoProcessorConfiguration {
 
     @Data
     public static class EntityConfig {
-        private boolean generate;
         private String packageName;
-        private String extendFrom;
-
-        public EntityConfig() {
-            this.generate = true;
-        }
     }
 
     @Data
