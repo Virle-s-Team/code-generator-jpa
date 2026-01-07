@@ -302,11 +302,6 @@ public class GeneratorParameter {
             if (StringUtils.isNotEmpty(config.getAutoProcessor().getVm().getPackageName())) {
                 this.vm = config.getAutoProcessor().getVm().getPackageName();
             }
-
-            if (StringUtils.isNotEmpty(config.getAutoProcessor().getBody().getPackageName())) {
-                this.body = config.getAutoProcessor().getBody().getPackageName();
-            }
-
         }
 
 
