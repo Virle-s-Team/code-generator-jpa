@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 public abstract class BaseAutoService<ENTITY, ID extends Serializable, REQ, VM> {
 
     @Autowired
