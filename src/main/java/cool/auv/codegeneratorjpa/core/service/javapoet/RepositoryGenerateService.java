@@ -1,16 +1,11 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
-import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
+import cool.auv.codegeneratorjpa.core.base.BaseRepository;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.javapoet.*;
-
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -30,38 +25,18 @@ public class RepositoryGenerateService {
         this.context = context;
     }
     public void generateBaseMapper() throws IOException {
-
-        if (!GeneratorUtil.checkGenerate(AutoEntity.GenerateFileType.Repository, context)) {
-            return;
-        }
-
         GeneratorParameter.Name name = context.getName();
         GeneratorParameter.Package pkg = context.getPkg();
+        ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
+        ClassName idClass = ClassName.get(Long.class);
+
         Filer filer = processingEnv.getFiler();
         TypeSpec mapperInterface = TypeSpec.interfaceBuilder(name.getBaseRepositoryName())
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(AnnotationSpec.builder(Repository.class).build()) // 使用 @Repository 而非 @Mapper
-                .addAnnotation(AnnotationSpec.builder(Primary.class).build())
                 .addAnnotation(GeneratorUtil.buildGeneratedAnnotation())
                 .addSuperinterface(
-                        ParameterizedTypeName.get(
-                                ClassName.get(JpaRepository.class),
-                                ClassName.get(pkg.getEntity(), name.getEntityName()),
-                                ClassName.get(Long.class)
-                        )
-                )
-                .addSuperinterface(
-                        ParameterizedTypeName.get(
-                                ClassName.get(CrudRepository.class ),
-                                ClassName.get(pkg.getEntity(), name.getEntityName()),
-                                ClassName.get(Long.class)
-                        )
-                )
-                .addSuperinterface(
-                        ParameterizedTypeName.get(
-                                ClassName.get(JpaSpecificationExecutor.class),
-                                ClassName.get(pkg.getEntity(), name.getEntityName())
-                        )
+                        ParameterizedTypeName.get(ClassName.get(BaseRepository.class), entityClass, idClass)
                 )
                 .build();
 

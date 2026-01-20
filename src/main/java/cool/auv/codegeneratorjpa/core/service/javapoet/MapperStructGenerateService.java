@@ -1,11 +1,8 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
-import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
+import cool.auv.codegeneratorjpa.core.base.BaseAutoMapstruct;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
-import cool.auv.codegeneratorjpa.core.mapstruct.BaseMapstruct;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
-import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
-import org.mapstruct.Mapper;
 import org.springframework.javapoet.*;
 
 import javax.annotation.processing.Filer;
@@ -27,28 +24,19 @@ public class MapperStructGenerateService {
     }
 
     public void generateBaseMapstruct() throws IOException {
-
-        if (!GeneratorUtil.checkGenerate(AutoEntity.GenerateFileType.MapperStruct, context)) {
-            return;
-        }
         GeneratorParameter.Name name = context.getName();
         GeneratorParameter.Package pkg = context.getPkg();
         Filer filer = processingEnv.getFiler();
-
-        TypeSpec mapstruct = TypeSpec.classBuilder(name.getBaseMapstructName())
-                .addModifiers(Modifier.PUBLIC)
-                .addModifiers(Modifier.ABSTRACT)
-                .addAnnotation(
-                        AnnotationSpec.builder(Mapper.class)
-                                .addMember("componentModel", "$S", "spring")
-                                .addMember("uses", "$L","{}")
-                                .build()
-                )
-                .addAnnotation(GeneratorUtil.buildGeneratedAnnotation())
-                .superclass(ParameterizedTypeName.get(ClassName.get(BaseMapstruct.class),
-                        ClassName.get(pkg.getEntity(), name.getEntityName()),
-                        ClassName.get(pkg.getVm(), name.getVmName())
-                ))
+        ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
+        ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
+        TypeSpec mapstruct = TypeSpec.classBuilder(name.getBaseMapstructName()) // 这里建议去掉 Base 前缀，直接叫 SysRoleMapper
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .addAnnotation(AnnotationSpec.builder(ClassName.get("org.mapstruct", "Mapper"))
+                        .addMember("componentModel", "$S", "spring")
+                        .addMember("collectionMappingStrategy", "$T.$L",
+                                ClassName.get("org.mapstruct", "CollectionMappingStrategy"), "TARGET_IMMUTABLE")
+                        .build())
+                .superclass(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass))
                 .build();
 
         JavaFile javaFile = JavaFile.builder(pkg.getMapstruct(), mapstruct).build();

@@ -1,6 +1,5 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
-import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import cool.auv.codegeneratorjpa.core.exception.AppException;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
@@ -30,9 +29,6 @@ public class ServiceGenerateService {
     }
 
     public void generateBaseService() throws IOException {
-        if (!GeneratorUtil.checkGenerate(AutoEntity.GenerateFileType.Service, context)) {
-            return;
-        }
         GeneratorParameter.Name name = context.getName();
         GeneratorParameter.Package pkg = context.getPkg();
         ClassName entityType = ClassName.get(pkg.getEntity(), name.getEntityName());
