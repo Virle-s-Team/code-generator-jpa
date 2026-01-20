@@ -34,7 +34,7 @@ public class GeneratorByJavaPoetService {
 
 
     public void generateBaseService() throws IOException {
-        serviceGenerateService.generateBaseService();
+//        serviceGenerateService.generateBaseService();
     }
 
     public void generateBaseServiceImpl() throws IOException {
