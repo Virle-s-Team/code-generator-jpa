@@ -11,25 +11,4 @@ public @interface AutoEntity {
     String basePath();
 
     String docTag() default "";
-
-    ControllerExclude[] controllerExclude() default {};
-
-    GenerateFileType[] generateFileType() default { GenerateFileType.All };
-
-    enum GenerateFileType {
-        Controller,
-        Service,
-        ServiceImpl,
-        Repository,
-        MapperStruct,
-        All
-    }
-
-    enum ControllerExclude {
-        findById,
-        findByPage,
-        save,
-        update,
-        deleteById
-    }
 }
