@@ -1,16 +1,11 @@
 package cool.auv.codegeneratorjpa.core.utils;
 
-import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
-import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import org.springframework.javapoet.AnnotationSpec;
 
 import javax.annotation.processing.Generated;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.Properties;
-import java.util.Set;
 
 public class GeneratorUtil {
 
@@ -22,17 +17,6 @@ public class GeneratorUtil {
                 .addMember("date", "$S", GeneratorUtil.generationTimestamp())
                 .addMember("comments", "$S", GeneratorUtil.buildComments())
                 .build();
-    }
-
-    public static boolean checkGenerate(AutoEntity.GenerateFileType type, GeneratorContext context) {
-        Set<AutoEntity.GenerateFileType> MAPPER_GENERATION_TYPES =
-                EnumSet.of(type, AutoEntity.GenerateFileType.All);
-
-        AutoEntity.GenerateFileType[] generateFileTypes = context.getAnnotations().autoEntity().generateFileType();
-        if (Arrays.stream(generateFileTypes).noneMatch(MAPPER_GENERATION_TYPES::contains)) {
-            return false;
-        }
-        return true;
     }
 
     // 获取生成器名称
