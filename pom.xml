@@ -10,7 +10,7 @@
     </parent>
     <groupId>cool.auv</groupId>
     <artifactId>code-generator-jpa</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>code-generator-jpa</name>
     <description>code-generator-jpa</description>
     <url/>
@@ -234,25 +234,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <relocations>
-                                <!-- 如果需要，可以对类路径进行重定位 -->
-                            </relocations>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
