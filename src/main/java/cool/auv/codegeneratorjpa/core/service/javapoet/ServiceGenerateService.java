@@ -1,13 +1,13 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
+import cool.auv.codegeneratorjpa.core.base.BaseAutoService;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
-import cool.auv.codegeneratorjpa.core.exception.AppException;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.javapoet.*;
+import org.springframework.javapoet.ClassName;
+import org.springframework.javapoet.JavaFile;
+import org.springframework.javapoet.ParameterizedTypeName;
+import org.springframework.javapoet.TypeSpec;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -15,7 +15,6 @@ import javax.lang.model.element.Modifier;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Optional;
 
 public class ServiceGenerateService {
 
@@ -31,59 +30,17 @@ public class ServiceGenerateService {
     public void generateBaseService() throws IOException {
         GeneratorParameter.Name name = context.getName();
         GeneratorParameter.Package pkg = context.getPkg();
-        ClassName entityType = ClassName.get(pkg.getEntity(), name.getEntityName());
-        ClassName vmType = ClassName.get(pkg.getVm(), name.getVmName());
-        ClassName bodyType = ClassName.get(pkg.getBody(), name.getBodyName());
-
+        ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
+        ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
+        ClassName reqClass = ClassName.get(pkg.getRequest(), name.getRequestName());
+        ClassName idClass = ClassName.get(Long.class);
+        ParameterizedTypeName superClass = ParameterizedTypeName.get(
+                ClassName.get(BaseAutoService.class), entityClass, idClass, reqClass, vmClass);
         Filer filer = processingEnv.getFiler();
         TypeSpec serviceInterface = TypeSpec.interfaceBuilder(name.getBaseServiceName())
                 .addAnnotation(GeneratorUtil.buildGeneratedAnnotation())
                 .addModifiers(Modifier.PUBLIC)
-                .addMethod(
-                        MethodSpec.methodBuilder("save")
-                                .addException(ClassName.get(AppException.class))
-                                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                                .addParameter(ParameterSpec.builder(vmType, name.getVmVariable()).build())
-                                .returns(TypeName.VOID)
-                                .build()
-                )
-                .addMethod(
-                        MethodSpec.methodBuilder("update")
-                                .addException(ClassName.get(AppException.class))
-                                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                                .addParameter(ParameterSpec.builder(vmType, name.getVmVariable()).build())
-                                .returns(TypeName.VOID)
-                                .build()
-                )
-                .addMethod(
-                        MethodSpec.methodBuilder("findById")
-                                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                                .addParameter(ParameterSpec.builder(TypeName.LONG, "id").build())
-                                .returns(ParameterizedTypeName.get(ClassName.get(Optional.class), vmType))
-                                .build()
-                )
-                .addMethod(
-                        MethodSpec.methodBuilder("findAll")
-                                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                                .returns(ParameterizedTypeName.get(ClassName.get(Page.class), vmType))
-                                .addParameter(ParameterSpec.builder(ClassName.get(Pageable.class), "pageable").build())
-                                .build()
-                )
-                .addMethod(
-                        MethodSpec.methodBuilder("findPage")
-                                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                                .returns(ParameterizedTypeName.get(ClassName.get(Page.class), vmType))
-                                .addParameter(ParameterizedTypeName.get(ClassName.get(Specification.class), entityType), "specification")
-                                .addParameter(ClassName.get(Pageable.class), "pageable")
-                                .build()
-
-                )
-                .addMethod(
-                        MethodSpec.methodBuilder("deleteById").addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                                .returns(TypeName.VOID)
-                                .addParameter(ParameterSpec.builder(TypeName.LONG, "id").build())
-                                .build()
-                )
+                .addSuperinterface(superClass)
                 .build();
 
         JavaFile javaFile = JavaFile.builder(pkg.getService(), serviceInterface)

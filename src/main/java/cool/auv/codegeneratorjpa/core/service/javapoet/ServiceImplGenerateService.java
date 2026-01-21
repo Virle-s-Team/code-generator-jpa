@@ -1,12 +1,10 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
-import cool.auv.codegeneratorjpa.core.base.BaseAutoService;
+import cool.auv.codegeneratorjpa.core.base.AbstractAutoService;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.JavaFile;
-import org.springframework.javapoet.ParameterizedTypeName;
-import org.springframework.javapoet.TypeSpec;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.javapoet.*;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -34,12 +32,22 @@ public class ServiceImplGenerateService {
         ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
         ClassName idClass = ClassName.get(Long.class);
 
+        // 避让注解
+        ClassName serviceBase = ClassName.get(pkg.getService(), name.getBaseServiceName());
+
+        AnnotationSpec conditionalAnno = AnnotationSpec.builder(ConditionalOnMissingBean.class)
+                .addMember("value", "$T.class", serviceBase)
+                // 关键：告诉 Spring，我们要比对的是这个基类所携带的泛型参数
+                .build();
+
         Filer filer = processingEnv.getFiler();
         TypeSpec serviceImplClass = TypeSpec.classBuilder(name.getBaseServiceImplName())
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(org.springframework.stereotype.Service.class)
+                .addAnnotation(conditionalAnno)
                 .superclass(ParameterizedTypeName.get(
-                        ClassName.get(BaseAutoService.class), entityClass, idClass, reqClass, vmClass))
+                        ClassName.get(AbstractAutoService.class), entityClass, idClass, reqClass, vmClass))
+                .addSuperinterface(ClassName.get(pkg.getService(), name.getBaseServiceName()))
                 .build();
 
         JavaFile javaFile = JavaFile.builder(pkg.getServiceImpl(), serviceImplClass)

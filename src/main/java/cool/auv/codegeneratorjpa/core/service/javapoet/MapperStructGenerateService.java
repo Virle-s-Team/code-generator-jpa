@@ -36,7 +36,7 @@ public class MapperStructGenerateService {
                         .addMember("collectionMappingStrategy", "$T.$L",
                                 ClassName.get("org.mapstruct", "CollectionMappingStrategy"), "TARGET_IMMUTABLE")
                         .build())
-                .superclass(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass))
+                .addSuperinterface(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass))
                 .build();
 
         JavaFile javaFile = JavaFile.builder(pkg.getMapstruct(), mapstruct).build();

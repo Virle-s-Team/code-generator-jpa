@@ -33,7 +33,7 @@ public class RepositoryGenerateService {
         Filer filer = processingEnv.getFiler();
         TypeSpec mapperInterface = TypeSpec.interfaceBuilder(name.getBaseRepositoryName())
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(AnnotationSpec.builder(Repository.class).build()) // 使用 @Repository 而非 @Mapper
+                .addAnnotation(AnnotationSpec.builder(Repository.class).build()) // 使用 @Repository
                 .addAnnotation(GeneratorUtil.buildGeneratedAnnotation())
                 .addSuperinterface(
                         ParameterizedTypeName.get(ClassName.get(BaseRepository.class), entityClass, idClass)

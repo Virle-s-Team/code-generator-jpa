@@ -22,17 +22,21 @@ public abstract class BaseAutoController<T, ID extends Serializable, REQ extends
     @Autowired
     protected BaseAutoService<T, ID, REQ, VM> autoService;
 
+//    protected BaseAutoController(AbstractAutoService<T, ID, REQ, VM> autoService) {
+//        this.autoService = autoService;
+//    }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public ResponseEntity<VM> findById(@PathVariable(name = "id") ID id) {
+    public ResponseEntity<VM> findById(@PathVariable(name = "id") ID id) throws AppException {
         Optional<VM> vm = autoService.findById(id);
         return ResponseUtil.wrapOrNotFound(vm);
     }
 
     @GetMapping("/findByPage")
     @Operation(summary = "findByPage")
-    public ResponseEntity<List<VM>> page(REQ req, PageSortRequest pageSortRequest) {
+    public ResponseEntity<List<VM>> page(REQ req, PageSortRequest pageSortRequest) throws AppException {
         Page<VM> page = autoService.findPage(req.buildSpecification(), pageSortRequest.pageableWithSort());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -54,7 +58,7 @@ public abstract class BaseAutoController<T, ID extends Serializable, REQ extends
 
     @DeleteMapping("/{id}")
     @Operation(summary = "deleteById")
-    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") ID id) {
+    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") ID id) throws AppException {
         autoService.deleteById(id);
         return ResponseEntity.ok().build();
     }
