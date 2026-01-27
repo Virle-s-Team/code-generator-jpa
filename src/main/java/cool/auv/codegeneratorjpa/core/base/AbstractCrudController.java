@@ -21,12 +21,11 @@ public class AbstractCrudController<
         E,
         ID extends Serializable,
         REQ extends RequestInterface<E>,
-        VM,
-        S extends BaseAutoService<E, ID, REQ, VM>
+        VM
         > {
 
     @Autowired
-    protected S autoService;
+    protected BaseAutoService<E, ID, REQ, VM> autoService;
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")

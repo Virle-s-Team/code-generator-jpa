@@ -36,7 +36,6 @@ public class ControllerGenerateService {
         GeneratorParameter.Package pkg = context.getPkg();
         String basePath = context.getAnnotations().autoEntity().basePath();
         ClassName baseControllerClassName = ClassName.get(AbstractCrudController.class);
-        ClassName serviceClass = ClassName.get(pkg.getService(), name.getBaseServiceName());
         ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
         ClassName reqClass = ClassName.get(pkg.getRequest(), name.getRequestName());
         ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
@@ -44,7 +43,7 @@ public class ControllerGenerateService {
 
         ClassName customControllerMarker = ClassName.get(CustomControllerMarker.class);
 
-        TypeName superclass = ParameterizedTypeName.get(baseControllerClassName, entityClass, idClass, reqClass, vmClass, serviceClass);
+        TypeName superclass = ParameterizedTypeName.get(baseControllerClassName, entityClass, idClass, reqClass, vmClass);
         String docTag = context.getAnnotations().autoEntity().docTag();
         if (StringUtils.isEmpty(docTag)) {
             docTag = String.format("%s controller", name.getEntityName());
