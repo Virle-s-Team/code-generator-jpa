@@ -4,14 +4,14 @@ import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-public interface BaseAutoMapstruct<ENTITY, VM> {
+public abstract class BaseAutoMapstruct<ENTITY, VM> {
 
-    VM entityToVM(ENTITY entity);
+    public abstract VM entityToVM(ENTITY entity);
 
-    ENTITY vmToEntity(VM vm);
+    public abstract ENTITY vmToEntity(VM vm);
 
-    void updateEntityFromVM(VM vm, @MappingTarget ENTITY entity);
+    public abstract void updateEntityFromVM(VM vm, @MappingTarget ENTITY entity);
 
-    List<VM> entityToVM(List<ENTITY> entity);
+    public abstract List<VM> entityToVM(List<ENTITY> entity);
 
 }

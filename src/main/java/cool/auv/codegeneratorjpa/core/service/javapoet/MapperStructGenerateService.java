@@ -33,12 +33,9 @@ public class MapperStructGenerateService {
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                 .addAnnotation(AnnotationSpec.builder(ClassName.get("org.mapstruct", "Mapper"))
                         .addMember("componentModel", "$S", "spring")
-                        .addMember("collectionMappingStrategy", "$T.$L",
-                                ClassName.get("org.mapstruct", "CollectionMappingStrategy"), "TARGET_IMMUTABLE")
                         .build())
-                .addSuperinterface(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass))
+                .superclass(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass))
                 .build();
-
         JavaFile javaFile = JavaFile.builder(pkg.getMapstruct(), mapstruct).build();
         String generatedCode = javaFile.toString();
         JavaFileObject sourceFile = filer.createSourceFile(pkg.getMapstruct() + "." + name.getBaseMapstructName());

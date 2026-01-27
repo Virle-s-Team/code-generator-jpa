@@ -1,6 +1,7 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
 import cool.auv.codegeneratorjpa.core.base.AbstractAutoService;
+import cool.auv.codegeneratorjpa.core.base.CustomServiceMarker;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,12 +33,12 @@ public class ServiceImplGenerateService {
         ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
         ClassName idClass = ClassName.get(Long.class);
 
-        // 避让注解
-        ClassName serviceBase = ClassName.get(pkg.getService(), name.getBaseServiceName());
+        ClassName customServiceMarker = ClassName.get(CustomServiceMarker.class);
 
+        // 避让注解
         AnnotationSpec conditionalAnno = AnnotationSpec.builder(ConditionalOnMissingBean.class)
-                .addMember("value", "$T.class", serviceBase)
-                // 关键：告诉 Spring，我们要比对的是这个基类所携带的泛型参数
+                .addMember("value", "$T.class", entityClass)
+                .addMember("parameterizedContainer", "$T.class", customServiceMarker)
                 .build();
 
         Filer filer = processingEnv.getFiler();

@@ -17,15 +17,16 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BaseAutoController<T, ID extends Serializable, REQ extends RequestInterface<T>, VM> {
+public class AbstractCrudController<
+        E,
+        ID extends Serializable,
+        REQ extends RequestInterface<E>,
+        VM,
+        S extends BaseAutoService<E, ID, REQ, VM>
+        > {
 
     @Autowired
-    protected BaseAutoService<T, ID, REQ, VM> autoService;
-
-//    protected BaseAutoController(AbstractAutoService<T, ID, REQ, VM> autoService) {
-//        this.autoService = autoService;
-//    }
-
+    protected S autoService;
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
