@@ -11,4 +11,6 @@ public @interface AutoEntity {
     String basePath();
 
     String docTag() default "";
+
+    boolean enableMapperAnnotation() default true;
 }

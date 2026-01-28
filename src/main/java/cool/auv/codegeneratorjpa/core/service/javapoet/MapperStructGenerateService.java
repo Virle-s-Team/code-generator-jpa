@@ -1,5 +1,6 @@
 package cool.auv.codegeneratorjpa.core.service.javapoet;
 
+import cool.auv.codegeneratorjpa.core.annotation.AutoEntity;
 import cool.auv.codegeneratorjpa.core.base.BaseAutoMapstruct;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
@@ -26,16 +27,23 @@ public class MapperStructGenerateService {
     public void generateBaseMapstruct() throws IOException {
         GeneratorParameter.Name name = context.getName();
         GeneratorParameter.Package pkg = context.getPkg();
+        AutoEntity autoEntity = context.getAnnotations().autoEntity();
+
         Filer filer = processingEnv.getFiler();
         ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
         ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
-        TypeSpec mapstruct = TypeSpec.classBuilder(name.getBaseMapstructName()) // 这里建议去掉 Base 前缀，直接叫 SysRoleMapper
+        TypeSpec.Builder superclassBuilder = TypeSpec.classBuilder(name.getBaseMapstructName())
                 .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-                .addAnnotation(AnnotationSpec.builder(ClassName.get("org.mapstruct", "Mapper"))
-                        .addMember("componentModel", "$S", "spring")
-                        .build())
-                .superclass(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass))
-                .build();
+                .superclass(ParameterizedTypeName.get(ClassName.get(BaseAutoMapstruct.class), entityClass, vmClass));
+
+        if (autoEntity.enableMapperAnnotation()) {
+            AnnotationSpec mapperAnno = AnnotationSpec.builder(ClassName.get("org.mapstruct", "Mapper"))
+                    .addMember("componentModel", "$S", "spring")
+                    .build();
+            superclassBuilder.addAnnotation(mapperAnno);
+        }
+
+        TypeSpec mapstruct = superclassBuilder.build();
         JavaFile javaFile = JavaFile.builder(pkg.getMapstruct(), mapstruct).build();
         String generatedCode = javaFile.toString();
         JavaFileObject sourceFile = filer.createSourceFile(pkg.getMapstruct() + "." + name.getBaseMapstructName());
