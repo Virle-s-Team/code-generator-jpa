@@ -20,12 +20,12 @@
 
 ## 技术栈
 
-- Java 17
-- Spring Boot 3
+- Java 21
+- Spring Boot 3.4.3
 - Spring Data JPA
 - JavaPoet (代码生成)
-- MapStruct
-- Swagger
+- MapStruct 1.5.5.Final
+- Swagger 2.2.28
 
 ## 如何使用
 
@@ -41,15 +41,15 @@
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.8.1</version>
     <configuration>
-        <source>17</source>
-        <target>17</target>
+        <source>21</source>
+        <target>21</target>
         <encoding>UTF-8</encoding>
         <annotationProcessorPaths>
             <!-- 添加这里的依赖 -->
             <path>
                 <groupId>cool.auv</groupId>
                 <artifactId>code-generator-jpa</artifactId>
-                <version>0.0.1-SNAPSHOT</version> <!-- 请替换为你的版本号 -->
+                <version>0.0.2-SNAPSHOT</version> <!-- 请替换为你的版本号 -->
             </path>
             <!-- 如果你的项目也使用 MapStruct 或 Lombok，它们的处理器也需要放在这里 -->
             <path>
@@ -244,6 +244,26 @@ mvn clean compile
 *   **路径参数 (Path Variable)**:
     *   `id`: 要删除的实体ID。
 *   **成功响应**: `200 OK`，无返回内容。
+
+## 依赖说明
+
+当你在项目中引入 `code-generator-jpa` 时，以下传递依赖会被自动引入到你的项目中：
+
+| 依赖                           | 用途                  |
+|------------------------------|---------------------|
+| spring-boot-starter-data-jpa | 生成的 Repository 需要使用 |
+| spring-web / spring-webmvc   | 生成的 Controller 需要使用 |
+| mapstruct                    | 生成的 Mapper 需要       |
+| swagger-annotations          | 生成的 API 文档需要        |
+| jackson-annotations/databind | 生成的实体类需要            |
+
+**注意**：编译时工具依赖（如 auto-service、lombok）已设置为 `optional`，不会传递到你的项目。
+
+## 版本兼容性
+
+| 版本             | Java | Spring Boot |
+|----------------|------|-------------|
+| 0.0.2-SNAPSHOT | 21   | 3.4.3       |
 
 ## 贡献
 
