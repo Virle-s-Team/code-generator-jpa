@@ -32,4 +32,6 @@ jobs:
         cache: maven
     - name: Publish package
       run: mvn -B deploy -s settings.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
