@@ -19,7 +19,7 @@
 
                 <repository>
                     <id>github</id>
-                    <url>https://maven.pkg.github.com/Virle-s-Team/code-generator-jpa</url>
+                    <url>https://maven.pkg.github.com/Virle-s-Team/packages</url>
                     <releases>
                         <enabled>true</enabled>
                     </releases>
