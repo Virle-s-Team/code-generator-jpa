@@ -28,7 +28,7 @@ public class RepositoryGenerateService {
         GeneratorParameter.Name name = context.getName();
         GeneratorParameter.Package pkg = context.getPkg();
         ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
-        ClassName idClass = ClassName.get(Long.class);
+        TypeName idClass = context.getIdTypeName();
 
         Filer filer = processingEnv.getFiler();
         TypeSpec mapperInterface = TypeSpec.interfaceBuilder(name.getBaseRepositoryName())

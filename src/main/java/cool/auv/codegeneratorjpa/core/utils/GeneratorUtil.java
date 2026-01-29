@@ -1,10 +1,17 @@
 package cool.auv.codegeneratorjpa.core.utils;
 
+import jakarta.persistence.Id;
 import org.springframework.javapoet.AnnotationSpec;
+import org.springframework.javapoet.TypeName;
 
 import javax.annotation.processing.Generated;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Properties;
 
 public class GeneratorUtil {
@@ -52,5 +59,41 @@ public class GeneratorUtil {
             return compiler.contains("HotSpot") ? "javac" : compiler;
         }
         return SYSTEM_PROPS.getProperty("java.vm.name");
+    }
+
+    /**
+     * 从 Entity 类中获取 @Id 字段的类型
+     *
+     * @param entityElement Entity 类的 TypeElement
+     * @return ID 字段的 TypeName，如果未找到 @Id 字段则返回 Long.class
+     */
+    public static TypeName getIdTypeName(TypeElement entityElement) {
+        // 获取所有字段（包括继承的字段）
+        List<VariableElement> fields = ElementFilter.fieldsIn(entityElement.getEnclosedElements());
+
+        // 查找带有 @Id 注解的字段
+        for (VariableElement field : fields) {
+            if (field.getAnnotation(Id.class) != null) {
+                TypeMirror fieldType = field.asType();
+                return TypeName.get(fieldType);
+            }
+        }
+
+        // 如果未找到 @Id 注解，尝试从父类查找
+        TypeElement currentElement = entityElement;
+        while (currentElement.getSuperclass().getKind() != javax.lang.model.type.TypeKind.NONE) {
+            TypeMirror superClass = currentElement.getSuperclass();
+            currentElement = (TypeElement) ((javax.lang.model.type.DeclaredType) superClass).asElement();
+            fields = ElementFilter.fieldsIn(currentElement.getEnclosedElements());
+            for (javax.lang.model.element.VariableElement field : fields) {
+                if (field.getAnnotation(Id.class) != null) {
+                    TypeMirror fieldType = field.asType();
+                    return TypeName.get(fieldType);
+                }
+            }
+        }
+
+        // 默认返回 Long 类型
+        return TypeName.get(Long.class);
     }
 }

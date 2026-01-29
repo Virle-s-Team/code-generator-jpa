@@ -4,10 +4,7 @@ import cool.auv.codegeneratorjpa.core.base.BaseAutoService;
 import cool.auv.codegeneratorjpa.core.entity.GeneratorContext;
 import cool.auv.codegeneratorjpa.core.processors.GeneratorParameter;
 import cool.auv.codegeneratorjpa.core.utils.GeneratorUtil;
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.JavaFile;
-import org.springframework.javapoet.ParameterizedTypeName;
-import org.springframework.javapoet.TypeSpec;
+import org.springframework.javapoet.*;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -33,7 +30,7 @@ public class ServiceGenerateService {
         ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
         ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
         ClassName reqClass = ClassName.get(pkg.getRequest(), name.getRequestName());
-        ClassName idClass = ClassName.get(Long.class);
+        TypeName idClass = context.getIdTypeName();
         ParameterizedTypeName superClass = ParameterizedTypeName.get(
                 ClassName.get(BaseAutoService.class), entityClass, idClass, reqClass, vmClass);
         Filer filer = processingEnv.getFiler();

@@ -31,7 +31,7 @@ public class ServiceImplGenerateService {
         ClassName entityClass = ClassName.get(pkg.getEntity(), name.getEntityName());
         ClassName reqClass = ClassName.get(pkg.getRequest(), name.getRequestName());
         ClassName vmClass = ClassName.get(pkg.getVm(), name.getVmName());
-        ClassName idClass = ClassName.get(Long.class);
+        TypeName idClass = context.getIdTypeName();
 
         ClassName customServiceMarker = ClassName.get(CustomServiceMarker.class);
 
