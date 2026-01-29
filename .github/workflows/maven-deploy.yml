@@ -31,8 +31,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Publish to GitHub Packages
-      run: |
-        mkdir -p ~/.m2
-        echo "<settings><servers><server><id>github</id><username>${{ github.actor }}</username><password>${{ secrets.GITHUB_TOKEN }}</password></server></servers></settings>" > ~/.m2/settings.xml
-        mvn --batch-mode deploy
-
+      run: mvn -B deploy -s settings.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
