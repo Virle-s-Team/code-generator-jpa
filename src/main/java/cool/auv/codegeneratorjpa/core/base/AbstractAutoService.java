@@ -45,7 +45,7 @@ public abstract class AbstractAutoService<E, ID extends Serializable, REQ, VM> i
 
     @Transactional
     @Override
-    public VM update(ID id, VM vm) throws AppException {
+    public VM update(ID id, VM vm) {
         E managedEntity = repository.findById(id)
                 .orElseThrow(() -> new AppException("Entity not found"));
         mapstruct.updateEntityFromVM(vm, managedEntity);
